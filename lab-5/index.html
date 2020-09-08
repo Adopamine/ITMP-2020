@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Lab - Multimedia Programming 2563 ITKMITL</title>
 	<link rel="stylesheet" type="text/css" href="../src/reset.css">
 	<link rel="stylesheet" type="text/css" href="lab.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
 	<div id="canvas">
 		<section id="canvas_header">
@@ -13,20 +15,17 @@
 				{{score}} แสดงคะแนน
 			</div>
 		</section>
-		<section id="canvas_main" 
-		:data-play="play">
+		<section id="canvas_main" :data-play="play">
 			<main>
-				<div class="box _path" 
-				v-for="i in 14" 
-				:data-pst="i"></div>
-				<div class="box _toggle" data-pst="10" data-isrightarrow="isRightArrow"></div>
+				<div class="box _path" v-for="i in 14" :data-pst="i"></div>
+				<div class="box _toggle" data-pst="10" :data-isrightarrow="isRightArrow"></div>
 
-				<div class="box _fruit" v-for="f in fruits" :data-pst="f.pst"></div>
+				<div class="box _fruit" v-for="f in fruits" :data-pst="f.pst" :data-type="f.type"></div>
 
 				<div class="box _origin"></div>
 				<div class="box _12" data-pst="12"></div>
 				<div class="box _16" data-pst="16"></div>
-				
+
 			</main>
 		</section>
 		<section id="canvas_footer">
@@ -34,23 +33,23 @@
 				Toggle
 			</div>
 			<div v-if="!play" class="btn" id="endgame" onclick="window.location.reload()">
-				End Game
+				Restart
 			</div>
 		</section>
 	</div>
 
 	<script>
-		function rand(start,stop) {
-			let shift = (stop-start)+1
-			return Math.floor(Math.random()*100%shift)+start
+		function rand(start, stop) {
+			let shift = (stop - start) + 1
+			return Math.floor(Math.random() * 100 % shift) + start
 		}
-		
+
 		let fruitCount = 3
 		let isRightArrow = 1
 		let speed = 1000
 		let app = new Vue({
-			el:'#canvas',
-			data:{
+			el: '#canvas',
+			data: {
 				fruitCount: fruitCount,
 				speed: speed,
 				isRightArrow, isRightArrow,
@@ -63,11 +62,11 @@
 				]
 			},
 			methods: {
-				click: function(){
-					if(this.isRightArrow == 1) {
+				click: function () {
+					if (this.isRightArrow == 1) {
 						this.isRightArrow = 0
 						console.log("isRightArrow = 0")
-					}else if (this.isRightArrow == 0) {
+					} else if (this.isRightArrow == 0) {
 						this.isRightArrow = 1
 						console.log("isRightArrow = 1")
 					}
@@ -75,25 +74,29 @@
 			},
 			computed: {},
 			watch: {
-				turn: function (x) {
+				turn: function () {
 					let count = this.fruits.length
 
 					for (let f in this.fruits) {
 						let run = this.fruits[f].run
 						if (run) {
 							this.fruits[f].pst += this.fruits[f].step
-						}//เดิน
-						if(this.fruits[f].pst == 11 && this.isRightArrow == 1) {
+						}//  เดิน
+						if (this.fruits[f].pst == 11 && this.isRightArrow == 1) {
 							this.fruits[f].pst = 13
 							this.fruits[f].step = 3
-						}//สลับสี
+						}// สลับสี
 						if (this.fruits[f].pst == 12 || this.fruits[f].pst == 16) {
 							if (this.fruits[f].pst == 16 && this.fruits[f].type == "yellow" && this.fruits[f].run == true) {
 								//console.log("Collect @#@As")
+								this.score++
 								this.fruits[f].run = false
-							} else if (this.fruits[f].pst == 12 && this.fruits[f].type == "red" && this.fruits[f].run == true){
+
+							} else if (this.fruits[f].pst == 12 && this.fruits[f].type == "red" && this.fruits[f].run == true) {
 								//console.log("Collect @#@As")
+								this.score++
 								this.fruits[f].run = false
+
 							} else if (this.fruits[f].pst == 12 && this.fruits[f].type == "yellow") {
 								clearInterval(playing)
 								this.play = false
@@ -101,19 +104,17 @@
 								clearInterval(playing)
 								this.play = false
 							}//จบเกม
-
-						}//หยุดหยุุดชีวิตหยุดกับเธอคนนี้
+						}// หยุด
 						//console.log(this.fruits[f].pst)
-
 					}
-						if (rand(1, 10) % 3 == 1) {
-							this.fruits.push({ id: fruitCount, type: 'red', pst: 1, run: true, step: 1 })
-							fruitCount++
-						} else if (rand(1, 10) % 3 == 0) {
-							this.fruits.push({ id: fruitCount, type: 'yellow', pst: 1, run: true, step: 1 })
-							fruitCount++
-						}
-						console.log(this.speed)
+					if (rand(1, 10) % 3 == 1) {
+						this.fruits.push({ id: fruitCount, type: 'red', pst: 1, run: true, step: 1 })
+						fruitCount++
+					} else if (rand(1, 10) % 3 == 0) {
+						this.fruits.push({ id: fruitCount, type: 'yellow', pst: 1, run: true, step: 1 })
+						fruitCount++
+					}
+					console.log(this.speed)
 				}
 			}
 		})
@@ -122,4 +123,5 @@
 		}, speed)
 	</script>
 </body>
+
 </html>
