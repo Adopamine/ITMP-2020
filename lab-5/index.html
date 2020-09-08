@@ -33,30 +33,33 @@
 			<div v-if="play" class="btn" id="toggle" @click="click()">
 				Toggle
 			</div>
-			<div v-if="!play" class="btn" id="endgame">
+			<div v-if="!play" class="btn" id="endgame" onclick="window.location.reload()">
 				End Game
 			</div>
 		</section>
 	</div>
 
 	<script>
-		function rand(start,stop){
+		function rand(start,stop) {
 			let shift = (stop-start)+1
 			return Math.floor(Math.random()*100%shift)+start
 		}
 		
-		let fruitCount = 5
-		let isRightArrow = 3
+		let fruitCount = 3
+		let isRightArrow = 1
 		let speed = 1000
 		let app = new Vue({
 			el:'#canvas',
 			data:{
-				play:true,
-				time:0,
-				score:0,
-				fruits:[
-					{id:1,type:"red",pst:5,run:true,step:1},
-					{id:2,type:"yellow",pst:5,run:true,step:1},
+				fruitCount: fruitCount,
+				speed: speed,
+				isRightArrow, isRightArrow,
+				play: true,
+				turn: 0,
+				score: 0,
+				fruits: [
+					{ id: 1, type: "red", pst: 5, run: true, step: 1 },
+					{ id: 2, type: 'yellow', pst: 2, run: true, step: 1 },
 				]
 			},
 			methods: {
@@ -68,7 +71,7 @@
 						this.isRightArrow = 1
 						console.log("isRightArrow = 1")
 					}
-				}
+				},
 			},
 			computed: {},
 			watch: {
@@ -80,18 +83,21 @@
 						if (run) {
 							this.fruits[f].pst += this.fruits[f].step
 						}//เดิน
-						if (this.fruits[f].pst == 11 && this.isRightArrow == 1) {
+						if(this.fruits[f].pst == 11 && this.isRightArrow == 1) {
 							this.fruits[f].pst = 13
 							this.fruits[f].step = 3
 						}//สลับสี
 						if (this.fruits[f].pst == 12 || this.fruits[f].pst == 16) {
-							if (this.fruits[f].pst == 16 && this.fruits[f].type == "yellow") {
+							if (this.fruits[f].pst == 16 && this.fruits[f].type == "yellow" && this.fruits[f].run == true) {
 								//console.log("Collect @#@As")
 								this.fruits[f].run = false
-							} else if (this.fruits[f].pst == 12 && this.fruits[f].type == "red" ){
+							} lse if (this.fruits[f].pst == 12 && this.fruits[f].type == "red" && this.fruits[f].run == true){
 								//console.log("Collect @#@As")
 								this.fruits[f].run = false
-							} else {
+							} else if (this.fruits[f].pst == 12 && this.fruits[f].type == "yellow") {
+								clearInterval(playing)
+								this.play = false
+							} else if (this.fruits[f].pst == 16 && this.fruits[f].type == "red") {
 								clearInterval(playing)
 								this.play = false
 							}//จบเกม
@@ -107,7 +113,7 @@
 							this.fruits.push({ id: fruitCount, type: 'yellow', pst: 1, run: true, step: 1 })
 							fruitCount++
 						}
-						console.log(fruitCount)
+						console.log(this.speed)
 				}
 			}
 		})
