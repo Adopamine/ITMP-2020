@@ -1,38 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>The Members - ITKMITL Multimedia Programming 2563</title>
+	<title>Make up Check</title>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<link rel="stylesheet" type="text/css" href="lab.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
 </head>
+
 <body>
+	<center>
 	<div id="app">
+		<h1>World of Make Up </h3>
 		
+		<h3>Id : {{person.id}}</h3>
+		<h3>Name : {{person.name}}</h3>
+		<h3>Brand : {{person.brand}}</h3>
+		<h3>Price : {{person.price}} {{person.price_sign}}</h3>
+		<h3>Link : {{person.product_link}}</h3>
+		
+
+		<button @click="isthisyes">ซื้อใช่หรือไม่</button>
+		<h2>{{yesno.answer}}</h2>
+		<img :src="yesno.image"><br>
+		
+		<h2>Make Up List</h2>
+		<h3>กรุณารอสักครู่</h3>
+		<h2 v-for="u in users" :data-id="u.id" @click="viewBio(u)">
+			<img :src="`https://picsum.photos/seed/picsum/200/300`" alt="">
+		<br>{{u.name}}</h2>
 	</div>
 	
 
 	<script>
-		fetch('https://jsonplaceholder.typicode.com/users')
+		fetch('http://makeup-api.herokuapp.com/api/v1/products.json')
 		.then(response => response.json())
-		.then(json => {console.log(json)})
+		.then(json => {console.log(json)
+			app.users = json
+			app.person = json[0]
+		})
+		
 		let app = new Vue({
 			el: '#app',
+			methods:{
+				viewBio: function (users) {
+					this.person = users
+					this.yesno = {
+							"answer":"ถ้าลังเล CLick",
+							"forced":false,
+							"image":""}
+				},
+				isthisyes: function(){
+					fetch('https://yesno.wtf/api')
+					.then(response => response.json())
+					.then(json => {console.log(json)
+						app.yesno = json
+					})
+				}
+			},
 			data: {
-				users :[],
-				person:{
-					id:0,
-					name:'..loading',
-					username:'..loading',
-					email:'..loading',
-					website:'..loading',
-					company:{
-						name : '..loading',
-					}
-				}	
+				yesno:{
+					"answer":"ถ้าลังเล CLick",
+					"forced":false,
+					"image":""},
+				person :{
+					"id":1048,
+					"brand":"Lippie Pencil",
+					"name":"colourpop",
+					"price":"5.0",
+					"price_sign":"$",
+					"product_link":"https://colourpop.com/collections/lippie-pencil"
+					
+					
+				},
+				users :[
+				{
+					"id":1048,
+					"brand":"__________",
+					"name":"__________",
+					"price":"__________",
+					"price_sign":"__________",
+					"product_link":"__________"}
+
+				],
+				
 			}
+					
+				
+			
 		})
 
 	</script>
+	</center>
 </body>
 </html>
